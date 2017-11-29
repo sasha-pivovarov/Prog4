@@ -24,7 +24,7 @@ print(df.head())
 
 pipe = make_pipeline(TfidfVectorizer(), NMF(), LinearSVC())
 params = {
-          "tfidfvectorizer__min_df": [5, 10],
+          "tfidfvectorizer__min_df": [0.01, 0.1],
           "tfidfvectorizer__max_df": [0.6, 0.8],
           "tfidfvectorizer__sublinear_tf": [True, False],
           "tfidfvectorizer__use_idf": [True],
@@ -34,15 +34,15 @@ params = {
           "linearsvc__random_state":[SEED],
           "linearsvc__C": [0.5, 1.0, 5.0]
           }
-model = GridSearchCV(pipe, param_grid=params)
+model = GridSearchCV(pipe, param_grid=params, verbose=True)
 
 y = df.airline_sentiment.values
 df_train, df_test, y_train, y_test = train_test_split(df, y, test_size=0.25, stratify=y, random_state=SEED, shuffle=True)
 
 print("Fitting model...")
-model.fit(df_train, y_train)
+model.fit(df_train.text, y_train.astype(int))
 print(model.best_params_)
-y_pred = model.predict(df_test)
+y_pred = model.predict(df_test.text)
 print(classification_report(y_test, y_pred))
 
 
