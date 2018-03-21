@@ -1,5 +1,5 @@
 import unittest
-from hw4.task_1 import search_rabin_multi
+from homework_4.task_1 import search_rabin_multi
 
 class test_search_rabin_multi(unittest.TestCase):
 
