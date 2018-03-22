@@ -51,7 +51,7 @@ class TextStatistics:
         words = list(" ".join(self.articles))
         trigrams = Counter(zip(words, words[1:], words[2:]))
         if use_idf:
-            trigrams = {key: value*self.get_idf(key) for key, value in trigrams.values()}
+            trigrams = {key: value*self.get_idf("".join(key)) for key, value in trigrams.items()}
         sorted_items = sorted(trigrams.items(), key=lambda x: x[1], reverse=True)[:n]
         list_of_3grams_in_descending_order_by_freq = [x[0] for x in sorted_items]
         list_of_their_corresponding_freq = [x[1] for x in sorted_items]
@@ -60,7 +60,7 @@ class TextStatistics:
     def get_top_words(self, n, use_idf=True):
         words = Counter(" ".join(self.articles).split())
         if use_idf:
-            words = {key: value*self.get_idf(key) for key, value in words.values()}
+            words = {key: value*self.get_idf(key) for key, value in words.items()}
         sorted_items = sorted(words.items(), key=lambda x: x[1], reverse=True)[:n]
         list_of_words_in_descending_order_by_freq = [x[0] for x in sorted_items]
         list_of_their_corresponding_freq = [x[1] for x in sorted_items]
@@ -81,7 +81,7 @@ class TextStatistics:
 class Experiment:
     def __init__(self, start="Natural language processing"):
         parser = WikiParser()
-        articles = parser.get_articles(start, 1, 100)
+        articles = parser.get_articles(start, 1, 15)
         stats_full = TextStatistics(articles)
         stats_start = TextStatistics([articles[0]])
         top_start = stats_start.get_top_3grams(5), stats_start.get_top_words(5)
@@ -99,104 +99,111 @@ class Experiment:
         print("Top words from seed article:\n")
         pprint(self.results["start_words"])
 
-    # Top trigramsfrom entire corpus with counts:
+    # Top
+    # trigrams
+    # from entire corpus
+    # with counts:
     #
-    # ([('from', 'the', 'original'),
-    #   ('archived', 'from', 'the'),
-    #   ('natural', 'language', 'processing'),
-    #   ('the', 'original', 'on'),
-    #   ('the', 'use', 'of'),
-    #   ('the', 'european', 'union'),
-    #   ('of', 'the', 'european'),
-    #   ('one', 'of', 'the'),
-    #   ('a', 'b', 'c'),
-    #   ('as', 'well', 'as'),
-    #   ('the', 'number', 'of'),
-    #   ('proceedings', 'of', 'the'),
-    #   ('cambridge', 'university', 'press'),
-    #   ('for', 'example', 'the'),
-    #   ('such', 'as', 'the'),
-    #   ('university', 'press', 'isbn'),
-    #   ('the', 'united', 'states'),
-    #   ('a', 'number', 'of'),
-    #   ('the', 'end', 'of'),
-    #   ('part', 'of', 'the')],
-    #  [210,
-    #   203,
-    #   167,
-    #   162,
-    #   153,
-    #   147,
-    #   133,
-    #   131,
-    #   131,
-    #   125,
-    #   103,
-    #   99,
-    #   98,
-    #   93,
-    #   92,
-    #   91,
-    #   83,
-    #   81,
-    #   77,
-    #   77])
-
-    # Top trigrams from seed article:
+    # ([(' ', 't', 'h'),
+    #   ('t', 'h', 'e'),
+    #   ('h', 'e', ' '),
+    #   (' ', 'i', 'n'),
+    #   ('i', 'n', 'g'),
+    #   ('e', 'd', ' '),
+    #   (' ', 'o', 'f'),
+    #   ('i', 'o', 'n'),
+    #   ('o', 'f', ' '),
+    #   (' ', 'a', 'n'),
+    #   ('t', 'i', 'o'),
+    #   ('o', 'n', ' '),
+    #   ('a', 't', 'i'),
+    #   ('n', 'g', ' '),
+    #   ('e', 's', ' '),
+    #   ('a', 'n', 'd'),
+    #   ('n', 'd', ' '),
+    #   ('i', 'n', ' '),
+    #   (' ', 'c', 'o'),
+    #   ('e', 'r', ' ')],
+    #  [355.4375,
+    #   326.3125,
+    #   261.75,
+    #   172.125,
+    #   170.5625,
+    #   166.8125,
+    #   159.5,
+    #   158.8125,
+    #   152.0,
+    #   150.0625,
+    #   143.6875,
+    #   141.75,
+    #   137.5,
+    #   134.0,
+    #   126.9375,
+    #   126.625,
+    #   126.25,
+    #   125.75,
+    #   113.75,
+    #   107.875])
+    # Top
+    # trigrams
+    # from seed article:
     #
-    # ([('natural', 'language', 'processing'),
-    #   ('a', 'chunk', 'of'),
-    #   ('chunk', 'of', 'text'),
-    #   ('of', 'natural', 'language'),
-    #   ('systems', 'based', 'on')],
-    #  [7, 6, 6, 5, 4])
-
-    # Top words from entire corpus:
+    # ([(' ', 't', 'h'),
+    #   ('t', 'h', 'e'),
+    #   ('i', 'n', 'g'),
+    #   (' ', 'o', 'f'),
+    #   ('i', 'o', 'n')],
+    #  [226.0, 203.0, 198.0, 163.0, 156.0])
+    # Top
+    # words
+    # from entire corpus:
     #
     # (['the',
     #   'of',
     #   'and',
     #   'in',
     #   'a',
+    #   'arabic',
+    #   'turing',
+    #   'turings',
     #   'to',
     #   'is',
+    #   'varieties',
+    #   'dialects',
+    #   'pronunciation',
     #   'for',
+    #   'hodges',
+    #   'arabic.',
     #   'as',
+    #   'agglutinative',
     #   'that',
-    #   'are',
-    #   'language',
-    #   'on',
-    #   'by',
-    #   'or',
-    #   'with',
-    #   'be',
-    #   'from',
-    #   'an',
-    #   'it'],
-    #  [20958,
-    #   13690,
-    #   9916,
-    #   8877,
-    #   8865,
-    #   7098,
-    #   5198,
-    #   3648,
-    #   3456,
-    #   2898,
-    #   2608,
-    #   2588,
-    #   2297,
-    #   2240,
-    #   2111,
-    #   2056,
-    #   1955,
-    #   1783,
-    #   1693,
-    #   1598])
-
-    # Top words from seed article:
+    #   'bletchley'],
+    #  [248.9375,
+    #   151.4375,
+    #   105.3125,
+    #   104.1875,
+    #   97.5,
+    #   93.5,
+    #   88.25,
+    #   88.0,
+    #   84.4375,
+    #   61.0625,
+    #   53.0,
+    #   50.0,
+    #   44.0,
+    #   43.875,
+    #   41.0,
+    #   41.0,
+    #   39.5,
+    #   37.0,
+    #   35.25,
+    #   32.0])
+    # Top
+    # words
+    # from seed article:
     #
-    # (['of', 'the', 'a', 'and', 'in'], [152, 148, 83, 73, 57])
+    # (['of', 'the', 'a', 'and', 'in'], [152.0, 148.0, 83.0, 73.0, 57.0])
+
 
 if __name__ == "__main__":
     exp = Experiment()
